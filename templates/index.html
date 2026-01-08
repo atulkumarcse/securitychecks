@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>uniSense Scanner</title>
+    <style>
+        /* [ ... Keep all your existing CSS here ... ] */
+        :root { --bg-dark: #000; --accent-blue: #00bfff; --text-white: #fff; --text-gray: #ccc; --input-bg: #fff; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-dark); color: var(--text-white); padding: 40px; display: flex; justify-content: center; }
+        .main-container { display: flex; width: 100%; max-width: 1200px; gap: 50px; }
+        .scanner-section { flex: 2; }
+        h1 { font-size: 1.5rem; text-align: center; margin-bottom: 40px; }
+        .input-group { display: flex; gap: 20px; margin-bottom: 30px; }
+        .url-input { flex: 1; padding: 15px; border-radius: 2px; border: none; }
+        .scan-btn { padding: 0 40px; background: #fff; font-weight: bold; cursor: pointer; }
+        .progress-container { width: 100%; height: 20px; background: #111; border: 1px solid #444; margin-bottom: 40px; }
+        .progress-bar { width: 0%; height: 100%; background: var(--accent-blue); transition: width 0.5s; }
+        .result-box { background-color: #e9ecef; color: #333; padding: 20px; border-radius: 5px; flex: 1; font-size: 0.9rem; }
+        .threat-item { border: 1px solid white; height: 35px; margin-bottom: 8px; }
+        .report-link { border-bottom: 2px solid #fff; text-decoration: none; color: #fff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="scanner-section">
+        <h1>Welcome to Next generation uniSense Scanner</h1>
+
+        <div class="input-group">
+            <input type="text" id="targetUrl" class="url-input" placeholder="Please enter weburl">
+            <button class="scan-btn" onclick="startScan()">SCAN</button>
+        </div>
+        
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <div style="display: flex; gap: 40px;">
+            <a href="#" class="report-link">Previous Report</a>
+            <div class="result-box">
+                <strong>Scan result</strong><br><br>
+                <div id="resultContent">Ready to scan...</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="flex: 1;">
+        <h2>Top 10 Trending Threats</h2>
+        <div class="threat-item"></div><div class="threat-item"></div><div class="threat-item"></div>
+        <div class="threat-item"></div><div class="threat-item"></div><div class="threat-item"></div>
+    </div>
+</div>
+
+<script>
+    async function startScan() {
+        const url = document.getElementById('targetUrl').value;
+        const resultDiv = document.getElementById('resultContent');
+        const progressBar = document.getElementById('progressBar');
+
+        if (!url) return alert("Please enter a URL");
+
+        // UI Reset
+        resultDiv.innerHTML = "Scanning in progress...";
+        progressBar.style.width = "50%";
+
+        try {
+            const response = await fetch('/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            });
+            const data = await response.json();
+            
+            // Finalize UI
+            progressBar.style.width = "100%";
+            resultDiv.innerHTML = data.results.join("<br>");
+        } catch (error) {
+            resultDiv.innerHTML = "Error connecting to backend.";
+        }
+    }
+</script>
+
+</body>
+</html>
