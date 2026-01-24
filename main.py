@@ -4,6 +4,8 @@ import requests
 from utils.pdf_report import generate_pdf_report
 from bs4 import BeautifulSoup
 
+
+from plugins.a10_open_redirect import A10OpenRedirectPlugin
 from plugins.a02_crypto import A02CryptoPlugin
 from plugins.a03_injection import A03InjectionPlugin
 from plugins.a05_misconfig import A05MisconfigPlugin
@@ -11,6 +13,7 @@ from plugins.a06_components import A06ComponentPlugin
 from plugins.a01_access_control import A01AccessControlPlugin
 from plugins.a04_insecure_design import A04InsecureDesignPlugin
 from plugins.a08_integrity import A08IntegrityPlugin
+from plugins.a07_cookie_flags import A07CookieFlagsPlugin
 
 app = Flask(__name__)
 
@@ -22,7 +25,9 @@ ENABLED_PLUGINS = {
     "A04": True,
     "A05": True,
     "A06": True,
-    "A08": True
+    "A07": True,
+    "A08": True,
+    "A10": True
 }
 
 def load_plugins():
@@ -41,6 +46,10 @@ def load_plugins():
         plugins.append(A05MisconfigPlugin())
     if ENABLED_PLUGINS.get("A06"):
         plugins.append(A06ComponentPlugin())
+    if ENABLED_PLUGINS.get("A07"):
+        plugins.append(A07CookieFlagsPlugin())
+    if ENABLED_PLUGINS.get("A10"):
+        plugins.append(A10OpenRedirectPlugin())
     return plugins
 
 def perform_scan(url):
