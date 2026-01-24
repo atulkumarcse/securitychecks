@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scan Summary</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+
+  <h2>🛡️ Scan Summary</h2>
+  <p><strong>Target:</strong> {{ target }}</p>
+
+  <div class="row text-center mb-4">
+    <div class="col alert alert-danger">🔴 High<br><strong>{{ summary.counts.High }}</strong></div>
+    <div class="col alert alert-warning">🟠 Medium<br><strong>{{ summary.counts.Medium }}</strong></div>
+    <div class="col alert alert-info">🔵 Low<br><strong>{{ summary.counts.Low }}</strong></div>
+    <div class="col alert alert-success">🟢 Safe<br><strong>{{ summary.counts.Safe }}</strong></div>
+  </div>
+
+  <h4>📊 Risk Score</h4>
+  <p>
+    <strong>{{ summary.risk_score }}/100</strong>
+    — Overall Risk:
+    <span class="badge bg-danger" 
+          {% if summary.overall_risk == "Medium" %}bg-warning{% endif %}
+          {% if summary.overall_risk == "Low" %}bg-success{% endif %}>
+      {{ summary.overall_risk }}
+    </span>
+  </p>
+
+  <hr>
+
+  <h4>🧩 OWASP Top 10 Coverage</h4>
+  <ul>
+    {% for k, v in summary.owasp.items() %}
+      <li>{{ k }} → {{ v }} finding(s)</li>
+    {% endfor %}
+  </ul>
+
+  <hr>
+
+  <h4>🔝 Top Risk Drivers</h4>
+  <ul>
+    {% for r in summary.top_risks %}
+      <li><strong>{{ r.id }}</strong> – {{ r.title }}</li>
+    {% endfor %}
+  </ul>
+
+  <hr>
+
+  <a href="/" class="btn btn-secondary">⬅ Back to Scan</a>
+
+</body>
+</html>
