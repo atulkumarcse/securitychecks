@@ -81,12 +81,12 @@ def perform_scan(url):
     return results
 
 # 🔹 Serve UI
-@app.route("securitycheck/")
+@app.route("/securitycheck/")
 def home():
     return render_template("index.html")
 
 # 🔹 Scan API
-@app.route("securitycheck/scan", methods=["POST"])
+@app.route("/securitycheck/scan", methods=["POST"])
 def scan():
     data = request.get_json()
     url = data.get("url")
@@ -96,7 +96,7 @@ def scan():
 
     results = perform_scan(url)
     return jsonify({"results": results})
-@app.route("/export/pdf", methods=["POST"])
+@app.route("/securitycheck/export/pdf", methods=["POST"])
 def export_pdf():
     data = request.get_json()
     url = data.get("url")
