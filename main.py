@@ -81,12 +81,12 @@ def perform_scan(url):
     return results
 
 # 🔹 Serve UI
-@app.route("/")
+@app.route("securitycheck/")
 def home():
     return render_template("index.html")
 
 # 🔹 Scan API
-@app.route("/scan", methods=["POST"])
+@app.route("securitycheck/scan", methods=["POST"])
 def scan():
     data = request.get_json()
     url = data.get("url")
